@@ -1,3 +1,5 @@
+all: tex svg
+
 tex:
 	latexmk example.tex
 
@@ -7,6 +9,6 @@ svg:
 clean:
 	latexmk -c 
 
-clean-all:
+distclean:
 	latexmk -C
 	rm *.svg
