@@ -1,0 +1,56 @@
+\documentclass[multi,border=25]{standalone}
+\usepackage[siunitx]{circuitikz}
+
+\standaloneenv{circuitikz}
+
+\ctikzsubcircuitdef{thermistor}{center, in, out}{
+    coordinate (#1-center)
+    foreach[count=\i] \x in {in, out} {
+        (#1-center) + (\fpeval{(-1)^\i * 1.5}, 0) coordinate (#1-\x)
+    }
+    (#1-in) to[
+        sR,
+        name=#1-sr,
+        l=~,
+        a=~,
+        v=$V_{ts}$,
+        i=$i_{ts}$,
+        voltage shift=0
+    ] (#1-out)
+}
+
+\ctikzsubcircuitactivate{thermistor}
+
+\newcommand{\PTC}[3]{
+    \thermistor{#1}{#2}
+    node[right, font=\tiny] at (#1-sr.label) {+t\si{\degree}}
+    node[above] at (#1-sr.n) (#1-label) {\texttt{#3}}
+}
+
+\newcommand{\NTC}[3]{
+    \thermistor{#1}{#2}
+    node[right, font=\tiny] at (#1-sr.label) {-t\si{\degree}}
+    node[above] at (#1-sr.n) (#1-label) {\texttt{#3}}
+}
+
+\newcommand{\PTCPN}[4]{
+    \PTC{#1}{#2}{#3}
+    (#1-label) + (0, 0.2) coordinate (#1-pn)
+    node[above] at (#1-pn) {\texttt{#4}}
+}
+
+\begin{document}
+
+\begin{circuitikz}[american]
+    \draw(0,0) \PTC{TH1}{center}{\SI{47}{\kilo\ohm}};
+\end{circuitikz}
+
+\begin{circuitikz}[american]
+    \draw(0,0) \NTC{TH2}{center}{\SI{47}{\kilo\ohm}};
+\end{circuitikz}
+
+\begin{circuitikz}[american]
+    \draw(0,0) \PTCPN{TH2}{center}{\SI{100}{\kilo\ohm}}{TMP63};
+\end{circuitikz}
+
+\end{document}
