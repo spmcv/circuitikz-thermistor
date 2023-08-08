@@ -2,7 +2,7 @@ tex:
 	latexmk example.tex
 
 svg:
-	dvisvgm example.dvi
+	dvisvgm --page=1-3 example.dvi
 
 clean:
 	latexmk -c 
